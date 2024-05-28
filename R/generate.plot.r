@@ -2,7 +2,7 @@ library(gridExtra)
 library(ggplot2)
 library(Seurat)
 
-generate_plot <- function(seurat_object, project, genes, cell_types, treatment_col, treatment = NULL) {
+generate.plot <- function(seurat_object, project, genes, cell_types, treatment_col, treatment = NULL) {
   output_dir <- paste0(project, "_SC_Expression")
   dir.create(output_dir, showWarnings = FALSE)  # Create directory if it doesn't exist
   
