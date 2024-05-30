@@ -57,14 +57,22 @@ generate.plot <- function(seurat_object, project, genes, cell_annotation, cell_t
           labels <- c("Neither", "Co-expression", gene1, gene2)
           values <- c("grey", "purple", "red", "blue")
           
-          plot <- suppressMessages({suppressWarnings({
+          # Generate the table plot
+          table_plot <- ggplot() +
+            theme_void() +  # Remove background and axes
+            annotation_custom(tableGrob(dtab, rows = rownames(dtab)), 
+                              xmin = 0, xmax = 1, ymin = 0, ymax = 1)
+
+          # Generate the main plot
+          main_plot <- suppressMessages({suppressWarnings({
             DimPlot(seurat_object, cells.highlight = list(g1, g2, both), sizes.highlight = 0.2, shuffle = TRUE) + 
               scale_color_manual(labels = labels, values = values) +
               labs(color = cell_type) +
-              theme(plot.width = unit(12, "in"), plot.height = unit(6, "in"), plot.margin = margin(0, 8, 0, 0, "cm"), legend.position = c(1.1, .9)) + 
-              annotation_custom(tableGrob(dtab, rows = c("Neither", "Both", gene1, gene2)), 
-                                xmin = 45, xmax = 1, ymin = -20, ymax = -1)
-        })})
+              theme(plot.width = unit(12, "in"), plot.height = unit(6, "in"), legend.position = c(1.4, 0.9))
+          })})
+
+          # Combine the main plot and table plot using Patchwork
+          plot <- main_plot + table_plot
 
           sanitized_cell_type <- gsub("[^A-Za-z0-9_]", "_", cell_type)
           filename <- ifelse(is.null(treatment), file.path(treatment_dir, paste0(sanitized_cell_type, "_", gene, ".pdf")), 
