@@ -2,7 +2,7 @@ library(gridExtra)
 library(ggplot2)
 library(Seurat)
 
-generate.plot <- function(seurat_object, project, genes, cell_types, treatment_col, treatment = NULL) {
+generate.plot <- function(seurat_object, project, genes, cell_annotation, cell_types, treatment_col, treatment = NULL) {
   output_dir <- paste0(project, "_SC_Expression")
   dir.create(output_dir, showWarnings = FALSE)  # Create directory if it doesn't exist
   
@@ -22,19 +22,19 @@ generate.plot <- function(seurat_object, project, genes, cell_types, treatment_c
         # Use tryCatch to handle the subset error
         tryCatch({
           # Compute the expression of the genes of interest
-          g1 <- subset(seurat_object, subset = monaco.fine == cell_type & (!!sym(treatment_col) == treat | is.null(treatment)) & !!sym(gene1) > 0 & !!sym(gene2) == 0)
+          g1 <- subset(seurat_object, subset = !!sym(cell_annotation) == cell_type & (!!sym(treatment_col) == treat | is.null(treatment)) & !!sym(gene1) > 0 & !!sym(gene2) == 0)
           g1 <- AddModuleScore(g1, features = gene1, name = "module_score")
           g1 <- WhichCells(g1, expression = module_score1 != 0)
           
-          g2 <- subset(seurat_object, subset = monaco.fine == cell_type & (!!sym(treatment_col) == treat | is.null(treatment)) & !!sym(gene2) > 0 & !!sym(gene1) == 0)
+          g2 <- subset(seurat_object, subset = !!sym(cell_annotation) == cell_type & (!!sym(treatment_col) == treat | is.null(treatment)) & !!sym(gene2) > 0 & !!sym(gene1) == 0)
           g2 <- AddModuleScore(g2, features = gene2, name = "module_score")
           g2 <- WhichCells(g2, expression = module_score1 != 0)
           
-          both <- subset(seurat_object, subset = monaco.fine == cell_type & (!!sym(treatment_col) == treat | is.null(treatment)) & !!sym(gene1) > 0 & !!sym(gene2) > 0)
+          both <- subset(seurat_object, subset = !!sym(cell_annotation) == cell_type & (!!sym(treatment_col) == treat | is.null(treatment)) & !!sym(gene1) > 0 & !!sym(gene2) > 0)
           both <- AddModuleScore(both, features = c(gene1, gene2), name = "module_score")
           both <- WhichCells(both, expression = module_score1 != 0 & module_score2 != 0)
           
-          neither <- subset(seurat_object, subset = monaco.fine == cell_type & (!!sym(treatment_col) == treat | is.null(treatment)) & !!sym(gene2) == 0 & !!sym(gene1) == 0)
+          neither <- subset(seurat_object, subset = !!sym(cell_annotation) == cell_type & (!!sym(treatment_col) == treat | is.null(treatment)) & !!sym(gene2) == 0 & !!sym(gene1) == 0)
           
           # Create tabl
           lg1 <- length(g1)
