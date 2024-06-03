@@ -1,6 +1,7 @@
 library(gridExtra)
 library(ggplot2)
 library(Seurat)
+library(patchwork)
 
 generate.plot <- function(seurat_object, project, genes, cell_annotation, cell_types, treatment_col, treatment = NULL) {
   output_dir <- paste0(project, "_SC_Expression")
@@ -72,11 +73,11 @@ generate.plot <- function(seurat_object, project, genes, cell_annotation, cell_t
           })})
 
           # Combine the main plot and table plot using Patchwork
-          plot <- main_plot + table_plot + plot_annotation(
-                    title = ,
-                    subtitle = ,
-                    caption = 
-                  )
+        plot <- main_plot + table_plot  + plot_annotation(
+                    title = paste("Co-expression of", gsub("_", " and ", genes)),
+                    subtitle = treatment,
+                    caption = project
+                )
 
           sanitized_cell_type <- gsub("[^A-Za-z0-9_]", "_", cell_type)
           filename <- ifelse(is.null(treatment), file.path(treatment_dir, paste0(sanitized_cell_type, "_", gene, ".pdf")), 
