@@ -10,12 +10,14 @@ make.merge.pdfs <- function(dir, genes, study_id, study_title) {
   if (length(genes) == 1) {
     genes <- genes[[1]]
     genes_sym <- gsub("_", " and ", genes)
-    txt <- paste(study_id, study_title, paste("Co-expression of", genes_sym), sep = "\n")
-    page <- paste0("/tmp/",genes, ".pdf")
 
-    pdf(page, paper="Letter")
+    # Generate title pdf
+    txt <- paste(study_id, study_title, paste("Co-expression of", genes_sym), sep = "\n")
+    page <- paste0("/tmp/", genes, ".pdf")
+    pdf(page, width=8.27, height=11.69) # Default ggsave page size in inches (A4 format)
+    par(mar=c(0.1, 0.1, 0.1, 0.1))
     plot.new()
-    text(0.5, 0.8, txt, font=4, cex=1.5, col="#000000", xpd=TRUE, adj=c(0, 0.5))
+    text(0.01, 0.98, txt, font=4, cex=1.5, col="#000000", xpd=TRUE, adj=c(0, 1))
     dev.off()
 
     subdirs <- list.dirs(path = file.path(dir, genes), full.names = TRUE, recursive = FALSE)
@@ -27,12 +29,14 @@ make.merge.pdfs <- function(dir, genes, study_id, study_title) {
   } else {
     for (gene in genes) {
       genes_sym <- gsub("_", " and ", gene)
+
+      # Generate title pdf
       txt <- paste(study_id, study_title, paste("Co-expression of", genes_sym), sep = "\n")
       page <- paste0("/tmp/", gsub(" ", "_", gene), ".pdf")
-
-      pdf(page, paper="Letter")
+      pdf(page, width=8.27, height=11.69) # Default ggsave page size in inches (A4 format)
+      par(mar=c(0.1, 0.1, 0.1, 0.1))
       plot.new()
-      text(0.5, 0.8, txt, font=4, cex=1.5, col="#000000", xpd=TRUE, adj=c(0, 0.5))
+      text(0.01, 0.98, txt, font=4, cex=1.5, col="#000000", xpd=TRUE, adj=c(0, 1))
       dev.off()
 
       subdirs <- list.dirs(path = file.path(dir, gene), full.names = TRUE, recursive = FALSE)
