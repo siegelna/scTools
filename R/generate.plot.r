@@ -74,7 +74,7 @@ generate.plot <- function(seurat_object, project, genes, cell_annotation, cell_t
 
           # Combine the main plot and table plot using Patchwork
         plot <- main_plot + table_plot  + plot_annotation(
-                    title = paste("Co-expression of", gsub("_", " and ", genes)),
+                    title = paste("Co-expression of", gsub("_", " and ", gene)),
                     subtitle = treatment,
                     caption = project
                 )
