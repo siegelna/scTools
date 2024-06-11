@@ -1,12 +1,11 @@
 suppressPackageStartupMessages({
   library(GEOquery)
   library(Seurat)
+  library(tools)
 })
 
 options(timeout = max(300, getOption("timeout")))
 options(download.file.method.GEOquery = "wget")
-
-library(tools)
 
 process.GEO.data <- function(GEOID) {
   gse <- getGEO(GEOID)
