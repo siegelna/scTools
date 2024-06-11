@@ -1,5 +1,7 @@
 remove_low_count_cells <- function(seurat_obj, metadata_column, threshold = 20) {
 
+  obj <- SetIdent(obj, value = metadata_column)
+
   total_counts <- table(seurat_obj@meta.data[[metadata_column]])
 
   low_count_cells <- names(total_counts[total_counts < threshold])
