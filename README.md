@@ -1,5 +1,20 @@
 # scTools
 
+## Dependencies:
+```yaml
+channels:
+ - conda-forge
+ - bioconda
+dependencies:
+ - r-seurat
+ - r-stringr
+ - r-data.table
+ - r-gridextra
+ - r-ggplot2
+ - r-patchwork
+ - r-pdftools
+ - bioconductor-geoquery
+```
 ## Functions
 
 ### generate.plot
