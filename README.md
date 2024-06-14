@@ -40,3 +40,8 @@ make.merge.pdfs(dir = "GSE135779_SC_Expression",
     study_id = "GSE135779",
     study_title = "test")
 ```
+
+### remove_low_count_cells
+```r
+remove_low_count_cells(seurat_obj = obj, metadata_column = "monaco.main", threshold = 20)
+``
