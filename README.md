@@ -44,4 +44,9 @@ make.merge.pdfs(dir = "GSE135779_SC_Expression",
 ### remove_low_count_cells
 ```r
 remove_low_count_cells(seurat_obj = obj, metadata_column = "monaco.main", threshold = 20)
-``
+```
+
+### read_seurat_objects_from_files
+```r
+read_seurat_objects_from_files(file_paths = paths, default_assay = "RNA")
+```
