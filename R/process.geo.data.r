@@ -19,7 +19,7 @@ process.GEO.data <- function(GEOID) {
   untar(rownames(study), exdir = GEOID)
   
   # Check if files are already extracted
-  file_paths <- list.files(path = GEOID, full.names = TRUE, pattern = "genes|barcodes|matrix", recursive = TRUE, ignore.case = TRUE)
+  file_paths <- list.files(path = GEOID, full.names = TRUE, pattern = "features|genes|barcodes|matrix", recursive = TRUE, ignore.case = TRUE)
   
   if (length(file_paths) == 0) {
     # Extract files from tarballs if file_paths is empty
