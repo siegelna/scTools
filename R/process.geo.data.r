@@ -16,12 +16,18 @@ process.GEO.data <- function(GEOID) {
   study <- getGEOSuppFiles(GEOID)
   
   # Untar the file
-  untar(rownames(study), exdir = GEOID)
+  tar_files <- rownames(study)[endsWith(rownames(study), ".tar")]
+
+  if (length(tar_files) > 0) {
+    untar(tar_files[1], exdir = GEOID)
+  } else {
+    cat("No .tar files found in row names.\n")
+  }
   
   # Check if files are already extracted
   file_paths <- list.files(path = GEOID, full.names = TRUE, pattern = "features|genes|barcodes|matrix", recursive = TRUE, ignore.case = TRUE)
   
-  if (length(file_paths) == 0) {
+  if (all(endsWith(file_paths, ".gz"))) {
     # Extract files from tarballs if file_paths is empty
     tar_files <- list.files(path = GEOID, pattern = "\\.tar\\.gz$", full.names = TRUE)
     
