@@ -91,34 +91,43 @@ process.GEO.data <- function(GEOID) {
     for (i in seq(1, length(file_paths), by = 3)) {
       # Extract sample identifier
       sample_id <- sub("(barcodes|features|genes|matrix)\\.tsv\\.gz", "", basename(file_paths[i]))
-      sample_id <- gsub("[^A-Za-z0-9]$", "", sample_id)
+      sample_id <- gsub("[^A-Za-z0-9]", "", sample_id)
       
-      # Read the files for the current sample
-      result <- ReadMtx(
-        mtx = file_paths[i + 2],
-        cells = file_paths[i],
-        features = file_paths[i + 1]
-      )
+      # Print the sample being processed
+      cat("Processing sample:", sample_id, "\n")
+      flush.console()  # Flush the console to show the message immediately
       
-      result@Dimnames[[1]] <- make.unique(result@Dimnames[[1]])
-      result@Dimnames[[2]] <- make.unique(result@Dimnames[[2]])
-      
-      # Create Seurat object from the result
-      seurat_obj <- CreateSeuratObject(
-        counts = result,
-        assay = "RNA",
-        min.cells = 3,
-        min.features = 300
-      )
-      
-      # Assign the Seurat object to a variable based on the sample identifier
-      assign(sample_id, seurat_obj, envir = .GlobalEnv)
-      
-      # Store the Seurat object in the list of Seurat objects
-      seurat_objects[[sample_id]] <- seurat_obj
-      
-      # Remove the variable created with ReadMtx
-      rm(result)
+      # Wrap the ReadMtx function call in a tryCatch block
+      tryCatch({
+        # Read the files for the current sample
+        result <- ReadMtx(
+          mtx = file_paths[i + 2],
+          cells = file_paths[i],
+          features = file_paths[i + 1]
+        )
+        
+        result@Dimnames[[1]] <- make.unique(result@Dimnames[[1]])
+        result@Dimnames[[2]] <- make.unique(result@Dimnames[[2]])
+        
+        # Create Seurat object from the result
+        seurat_obj <- CreateSeuratObject(
+          counts = result,
+          assay = "RNA",
+          min.cells = 3,
+          min.features = 300
+        )
+        
+        # Assign the Seurat object to a variable based on the sample identifier
+        assign(sample_id, seurat_obj, envir = .GlobalEnv)
+        
+        # Store the Seurat object in the list of Seurat objects
+        seurat_objects[[sample_id]] <- seurat_obj
+        
+        # Remove the variable created with ReadMtx
+        rm(result)
+      }, error = function(e) {
+        cat("Error processing sample:", sample_id, "- Sample removed\n")
+      })
     }
     
     # Loop over the Seurat objects to add Idents based on sample metadata
