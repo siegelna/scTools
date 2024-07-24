@@ -50,3 +50,23 @@ remove_low_count_cells(seurat_obj = obj, metadata_column = "monaco.main", thresh
 ```r
 read_seurat_objects_from_files(file_paths = paths, default_assay = "RNA")
 ```
+
+
+### frequency_table
+```r
+# Define inputs
+seurat_object <- data2  # Assuming data2 is your Seurat object
+meta.col <- "Type" # Treatment/stim column
+group <- c("Inflammed", "Noninflammed", "Control") # stims
+gene_name <- c("PD1", "PDL1") # Gene common names
+filter_column <- c("PDCD1", "CD274") # Gene names present in data
+ident <- "monaco.fine"
+
+# Generate frequency table
+result <- frequency_table(seurat_object = seurat_object,
+                          meta.col = meta.col,
+                          group = group,
+                          gene_name = gene_name,
+                          filter_column = filter_column,
+                          ident = ident)
+```
