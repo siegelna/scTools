@@ -1,5 +1,5 @@
 frequency_table <- function(seurat_object, meta.col, group, gene_name, filter_column, ident) {
-  # Set Idents of Seurat object
+  # Set Idents of Seurat objects
   Idents(seurat_object) <- ident
   
   # Initialize an empty list to store dataframes
