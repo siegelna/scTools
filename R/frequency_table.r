@@ -1,3 +1,9 @@
+suppressPackageStartupMessages({
+    library(Seurat)
+    library(dplyr)
+    library(tidyr)
+})
+
 frequency_table <- function(seurat_object, meta.col, group, gene_name, filter_column, ident) {
   # Set Idents of Seurat objects
   Idents(seurat_object) <- ident
@@ -21,6 +27,8 @@ frequency_table <- function(seurat_object, meta.col, group, gene_name, filter_co
           return(NULL)
         }
       )
+
+      subset_data <- filtered_data
       
       # If filtered_data is NULL, skip this iteration
       if (is.null(filtered_data)) {
@@ -39,7 +47,8 @@ frequency_table <- function(seurat_object, meta.col, group, gene_name, filter_co
       }
       
       # Calculate total number of cells for this group and each Ident
-      total_cells <- table(Idents(seurat_object))
+      Idents(subset_data) <- ident
+      total_cells <- table(Idents(subset_data))
       
       # Handle empty filtered_data after all filtering
       if (nrow(filtered_data) == 0) {
